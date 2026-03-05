@@ -1,19 +1,20 @@
-# Etapa de Build (Usa o SDK completo do .NET 9 para compilar)
+# Etapa de Build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
-# Copia os arquivos do projeto e restaura as dependências
-COPY *.csproj ./
-RUN dotnet restore
+COPY ["src/Restaurante.API/restaurante.csproj", "src/Restaurante.API/"]
 
-# Copia o resto do código e compila a versão final
-COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet restore "src/Restaurante.API/restaurante.csproj"
 
-# Etapa de Execução (Usa apenas o Runtime do .NET 9, deixando a imagem super leve)
+COPY . .
+
+WORKDIR "/app/src/Restaurante.API"
+
+RUN dotnet publish "restaurante.csproj" -c Release -o /app/out
+
+# Etapa de Execução
 FROM mcr.microsoft.com/dotnet/runtime:9.0
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Comando para rodar a aplicação
-ENTRYPOINT ["dotnet", "SeuProjetoConsole.dll"]
+ENTRYPOINT ["dotnet", "restaurante.dll"]
