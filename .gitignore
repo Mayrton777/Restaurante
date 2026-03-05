@@ -1,0 +1,12 @@
+# Pastas de compilação
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio Code
+.vscode/
+.vs/
+*.user
+*.suo
+
+# Arquivos temporários do Linux
+.DS_Store
